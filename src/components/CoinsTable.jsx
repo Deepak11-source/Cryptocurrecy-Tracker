@@ -130,7 +130,10 @@ const CoinsTable = () => {
                         </TableCell>
 
                         <TableCell align="right">
-                          {symbol} {formatNumber(row.current_price.toFixed(2))}
+                          {symbol}{' '}
+                          {row.current_price != null
+                            ? formatNumber(row.current_price.toFixed(2))
+                            : 'N/A'}
                         </TableCell>
 
                         <TableCell
@@ -140,14 +143,23 @@ const CoinsTable = () => {
                             fontWeight: '500',
                           }}
                         >
-                          {profit && '+'}
-                          {row.price_change_percentage_24h.toFixed(2)}%
+                          {row.price_change_percentage_24h != null ? (
+                            <>
+                              {profit && '+'}
+                              {row.price_change_percentage_24h.toFixed(2)}%
+                            </>
+                          ) : (
+                            'N/A'
+                          )}
                         </TableCell>
 
                         <TableCell align="right">
                           {symbol}{' '}
-                          {formatNumber(row.market_cap.toString().slice(0, -6))}
-                          M
+                          {row.market_cap != null
+                            ? `${formatNumber(
+                                row.market_cap.toString().slice(0, -6)
+                              )}M`
+                            : 'N/A'}
                         </TableCell>
                       </TableRow>
                     );
