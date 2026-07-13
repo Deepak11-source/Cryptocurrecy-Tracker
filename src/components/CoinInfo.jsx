@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useCryptoState } from '../CryptoContext';
 import axios from 'axios';
 import { HistoricalChart } from '../config/api';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
 import Chart from 'chart.js/auto'; // Updated import
 import { chartDays } from '../config/Chartdata';
@@ -71,15 +70,6 @@ const CoinInfo = ({ coin }) => {
     }
   }, [historicData, flag, days]);
 
-  const darkTheme = createTheme({
-    palette: {
-      primary: {
-        main: '#fff',
-      },
-      mode: 'dark',
-    },
-  });
-
   const Container = styled('div')({
     width: '75%',
     display: 'flex',
@@ -97,42 +87,36 @@ const CoinInfo = ({ coin }) => {
   });
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <Container>
-        {!historicData || flag === false ? (
-          <CircularProgress
-            style={{ color: 'gold' }}
-            size={250}
-            thickness={1}
-          />
-        ) : (
-          <>
-            <canvas ref={chartRef} width="400" height="180"></canvas>
-            <div
-              style={{
-                display: 'flex',
-                marginTop: 20,
-                justifyContent: 'space-around',
-                width: '100%',
-              }}
-            >
-              {chartDays.map((day) => (
-                <SelectButton
-                  key={day.value}
-                  onClick={() => {
-                    setDays(day.value);
-                    setFlag(false);
-                  }}
-                  selected={day.value === days}
-                >
-                  {day.label}
-                </SelectButton>
-              ))}
-            </div>
-          </>
-        )}
-      </Container>
-    </ThemeProvider>
+    <Container>
+      {!historicData || flag === false ? (
+        <CircularProgress style={{ color: 'gold' }} size={250} thickness={1} />
+      ) : (
+        <>
+          <canvas ref={chartRef} width="400" height="180"></canvas>
+          <div
+            style={{
+              display: 'flex',
+              marginTop: 20,
+              justifyContent: 'space-around',
+              width: '100%',
+            }}
+          >
+            {chartDays.map((day) => (
+              <SelectButton
+                key={day.value}
+                onClick={() => {
+                  setDays(day.value);
+                  setFlag(false);
+                }}
+                selected={day.value === days}
+              >
+                {day.label}
+              </SelectButton>
+            ))}
+          </div>
+        </>
+      )}
+    </Container>
   );
 };
 
