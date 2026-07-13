@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCryptoState } from '../CryptoContext';
 import { useParams } from 'react-router-dom';
 import { SingleCoin } from '../config/api';

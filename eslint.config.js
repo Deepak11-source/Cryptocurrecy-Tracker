@@ -29,7 +29,8 @@ export default [
     rules: {
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
-      ...reactHooks.configs.recommended.rules,
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'react/prop-types': 'off',
       'react-refresh/only-export-components': [
         'warn',
