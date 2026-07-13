@@ -1124,7 +1124,7 @@ const CoinsTable = () => {
                             src={row?.image}
                             alt={row.name}
                             height="50px"
-                            sx={{ marginBottom: '10px' }}
+                            style={{ marginBottom: '10px' }}
                           />
                           <div
                             style={{ display: 'flex', flexDirection: 'column' }}
