@@ -1,67 +1,71 @@
-import { useEffect, useState } from 'react';
 import { useCryptoState } from '../CryptoContext';
 import { useParams } from 'react-router-dom';
 import { SingleCoin } from '../config/api';
-import axios from 'axios';
 import CoinInfo from '../components/CoinInfo';
 import DOMPurify from 'dompurify';
 import { styled } from '@mui/system';
-import { Typography } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
+import useFetch from '../hooks/useFetch';
 import formatNumber from '../utils/formatNumber';
+
+const StyledDiv = styled('div')({
+  display: 'flex',
+  '@media (max-width: 960px)': {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+});
+
+const SidebarDiv = styled('div')({
+  width: '30%',
+  '@media (max-width: 960px)': {
+    width: '100%',
+  },
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginTop: 25,
+  borderRight: '2px solid grey',
+});
+
+const MarketDataDiv = styled('div')({
+  alignSelf: 'start',
+  padding: 25,
+  paddingTop: 10,
+  width: '100%',
+  '@media (max-width: 960px)': {
+    display: 'flex',
+    justifyContent: 'space-around',
+  },
+  '@media (max-width: 600px)': {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  '@media (max-width: 400px)': {
+    alignItems: 'start',
+  },
+});
 
 const CP = () => {
   const { id } = useParams();
-  const [coin, setCoin] = useState();
   const { currency, symbol } = useCryptoState();
+  const { data: coin, loading, error } = useFetch(SingleCoin(id));
 
-  const fetchCoin = async () => {
-    const { data } = await axios.get(SingleCoin(id));
+  if (error) {
+    return (
+      <Typography sx={{ color: 'red', textAlign: 'center', marginTop: '40px' }}>
+        Couldn&apos;t load this coin. Please try again later.
+      </Typography>
+    );
+  }
 
-    setCoin(data);
-  };
-
-  useEffect(() => {
-    fetchCoin();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currency]);
-
-  const StyledDiv = styled('div')({
-    display: 'flex',
-    '@media (max-width: 960px)': {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  });
-
-  const SidebarDiv = styled('div')({
-    width: '30%',
-    '@media (max-width: 960px)': {
-      width: '100%',
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: 25,
-    borderRight: '2px solid grey',
-  });
-
-  const MarketDataDiv = styled('div')({
-    alignSelf: 'start',
-    padding: 25,
-    paddingTop: 10,
-    width: '100%',
-    '@media (max-width: 960px)': {
-      display: 'flex',
-      justifyContent: 'space-around',
-    },
-    '@media (max-width: 600px)': {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    '@media (max-width: 400px)': {
-      alignItems: 'start',
-    },
-  });
+  if (loading || !coin) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40 }}>
+        <CircularProgress style={{ color: 'gold' }} size={100} thickness={2} />
+      </div>
+    );
+  }
 
   return (
     <StyledDiv>
@@ -116,12 +120,7 @@ const CP = () => {
               Rank:
             </Typography>
             &nbsp; &nbsp;
-            <Typography
-              variant="h5"
-              style={{
-                fontFamily: 'Montserrat',
-              }}
-            >
+            <Typography variant="h5" style={{ fontFamily: 'Montserrat' }}>
               {formatNumber(coin?.market_cap_rank)}
             </Typography>
           </span>
@@ -138,12 +137,7 @@ const CP = () => {
               Current Price:
             </Typography>
             &nbsp; &nbsp;
-            <Typography
-              variant="h5"
-              style={{
-                fontFamily: 'Montserrat',
-              }}
-            >
+            <Typography variant="h5" style={{ fontFamily: 'Montserrat' }}>
               {symbol}{' '}
               {coin?.market_data.current_price[currency.toLowerCase()] !==
               undefined
@@ -165,12 +159,7 @@ const CP = () => {
               Market Cap:
             </Typography>
             &nbsp; &nbsp;
-            <Typography
-              variant="h5"
-              style={{
-                fontFamily: 'Montserrat',
-              }}
-            >
+            <Typography variant="h5" style={{ fontFamily: 'Montserrat' }}>
               {symbol}{' '}
               {coin?.market_data.market_cap[currency.toLowerCase()] !==
               undefined
@@ -185,7 +174,6 @@ const CP = () => {
           </span>
         </MarketDataDiv>
       </SidebarDiv>
-      {/* CHART */}
       <CoinInfo coin={coin} />
     </StyledDiv>
   );
