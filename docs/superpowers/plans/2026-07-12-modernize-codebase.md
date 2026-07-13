@@ -406,8 +406,10 @@ export default defineConfig({
 - [ ] **Step 3: Create `src/setupTests.js`**
 
 ```js
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 ```
+
+(The `/vitest` subpath self-registers jest-dom's matchers on Vitest's own `expect` import — it doesn't require `globals: true` in `vite.config.js`. The plain `@testing-library/jest-dom` entry point expects a global `expect`, which this project's config deliberately does not enable, since every test file explicitly imports `describe`/`it`/`expect`/`vi` from `vitest`.)
 
 - [ ] **Step 4: Add test scripts to `package.json`**
 
