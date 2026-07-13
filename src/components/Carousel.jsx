@@ -1,30 +1,32 @@
-import { useEffect, useState } from 'react';
 import './Carousel.css';
-import axios from 'axios';
 import { TrendingCoins } from '../config/api';
 import { useCryptoState } from '../CryptoContext';
+import useFetch from '../hooks/useFetch';
+import formatNumber from '../utils/formatNumber';
 import AliceCarousel from 'react-alice-carousel';
 import { Link } from 'react-router-dom';
-import formatNumber from '../utils/formatNumber';
+import { Typography } from '@mui/material';
 
 const Carousel = () => {
-  const [trending, setTrending] = useState([]);
   const { currency, symbol } = useCryptoState();
+  const { data: trending, loading, error } = useFetch(TrendingCoins(currency));
 
-  const fetchTrendingCoins = async () => {
-    const { data } = await axios.get(TrendingCoins(currency));
-    setTrending(data);
-  };
-  // console.log(trending);
-  useEffect(() => {
-    fetchTrendingCoins();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currency]);
+  if (error) {
+    return (
+      <Typography sx={{ color: 'red', textAlign: 'center' }}>
+        Couldn&apos;t load trending coins. Please try again later.
+      </Typography>
+    );
+  }
+
+  if (loading || !trending) {
+    return null;
+  }
 
   const items = trending.map((coin) => {
     let profit = coin.price_change_percentage_24h >= 0;
     return (
-      <Link className="carouselItem" to={`/coins/${coin.id}`}>
+      <Link className="carouselItem" to={`/coins/${coin.id}`} key={coin.id}>
         <img
           src={coin?.image}
           alt={coin.name}
