@@ -22,6 +22,7 @@
 ### Task 1: Vite scaffold — replace CRA entry points, rename JSX files
 
 **Files:**
+
 - Create: `vite.config.js`
 - Create: `index.html` (project root)
 - Create: `src/main.jsx` (replaces `src/index.js`)
@@ -40,6 +41,7 @@
 - Modify: `package.json` (scripts + deps — full replacement shown in Task 2, this task only needs `dev`/`build`/`preview` scripts and the two new deps below to boot)
 
 **Interfaces:**
+
 - Produces: `npm run dev` boots a Vite dev server serving the existing app unchanged at `http://localhost:5173/` and `http://localhost:5173/coins/:id`.
 
 - [ ] **Step 1: Rename every JSX-containing `.js` file to `.jsx`**
@@ -175,9 +177,11 @@ git commit -m "Migrate build tooling from CRA to Vite"
 ### Task 2: Dependency version bumps
 
 **Files:**
+
 - Modify: `package.json`
 
 **Interfaces:**
+
 - Consumes: nothing new (pure dependency version bump, same import surface).
 - Produces: `npm run build` succeeds on the new dependency versions, confirming no breaking-change fallout before further refactor work begins.
 
@@ -231,12 +235,14 @@ git commit -m "Bump dependencies to current stable versions; drop unused @mui/la
 ### Task 3: ESLint (flat config) + Prettier
 
 **Files:**
+
 - Create: `eslint.config.js`
 - Create: `.prettierrc`
 - Create: `.editorconfig`
 - Modify: `package.json` (add `lint` script + devDependencies)
 
 **Interfaces:**
+
 - Produces: `npm run lint` — runs ESLint over `src/`.
 
 - [ ] **Step 1: Install lint/format tooling**
@@ -359,12 +365,14 @@ git commit -m "Add ESLint flat config and Prettier"
 ### Task 4: Vitest test infrastructure
 
 **Files:**
+
 - Modify: `vite.config.js` (add `test` config)
 - Create: `src/setupTests.js`
 - Create: `src/config/api.test.js`
 - Modify: `package.json` (add `test`/`test:watch` scripts + devDependencies)
 
 **Interfaces:**
+
 - Produces: `npm test` runs Vitest once; `npm run test:watch` runs it in watch mode. `src/setupTests.js` is the shared setup file all future tests rely on.
 
 - [ ] **Step 1: Install Vitest and testing libraries**
@@ -412,12 +420,7 @@ import '@testing-library/jest-dom';
 
 ```js
 import { describe, it, expect } from 'vitest';
-import {
-  CoinList,
-  SingleCoin,
-  HistoricalChart,
-  TrendingCoins,
-} from './api';
+import { CoinList, SingleCoin, HistoricalChart, TrendingCoins } from './api';
 
 describe('api URL builders', () => {
   it('CoinList interpolates currency', () => {
@@ -439,9 +442,7 @@ describe('api URL builders', () => {
   });
 
   it('HistoricalChart defaults days to 365', () => {
-    expect(HistoricalChart('bitcoin', undefined, 'usd')).toContain(
-      'days=365'
-    );
+    expect(HistoricalChart('bitcoin', undefined, 'usd')).toContain('days=365');
   });
 
   it('TrendingCoins interpolates currency', () => {
@@ -469,6 +470,7 @@ git commit -m "Add Vitest test infrastructure"
 ### Task 5: Extract `src/utils/formatNumber.js`
 
 **Files:**
+
 - Create: `src/utils/formatNumber.js`
 - Create: `src/utils/formatNumber.test.js`
 - Modify: `src/components/CoinsTable.jsx` (remove local `numberWithCommas`, import shared one)
@@ -476,6 +478,7 @@ git commit -m "Add Vitest test infrastructure"
 - Modify: `src/Pages/CP.jsx` (remove local `numberWithCommas`, import shared one)
 
 **Interfaces:**
+
 - Produces: `formatNumber(x: number | string): string` — the canonical comma-formatter (the `CP.jsx` version's `parseFloat`/NaN-guard behavior, since it's the most defensive of the three duplicates). Default export.
 
 - [ ] **Step 1: Write the failing test — `src/utils/formatNumber.test.js`**
@@ -490,10 +493,9 @@ describe('formatNumber', () => {
   });
 
   it('accepts numeric strings', () => {
-    expect(formatNumber('1234567.89')).toBe('1234567.89'.replace(
-      /\B(?=(\d{3})+(?!\d))/g,
-      ','
-    ));
+    expect(formatNumber('1234567.89')).toBe(
+      '1234567.89'.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    );
   });
 
   it('returns "Invalid Number" for non-numeric input', () => {
@@ -534,7 +536,7 @@ Remove:
 
 ```js
 export function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 ```
 
@@ -552,7 +554,7 @@ Remove:
 
 ```js
 export function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 ```
 
@@ -572,9 +574,9 @@ Remove the local:
 export function numberWithCommas(x) {
   const parsedNumber = parseFloat(x);
   if (isNaN(parsedNumber)) {
-    return "Invalid Number";
+    return 'Invalid Number';
   }
-  return parsedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parsedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 ```
 
@@ -606,10 +608,12 @@ git commit -m "Extract shared formatNumber util, remove 3 duplicate implementati
 ### Task 6: Extract `src/hooks/useFetch.js`
 
 **Files:**
+
 - Create: `src/hooks/useFetch.js`
 - Create: `src/hooks/useFetch.test.js`
 
 **Interfaces:**
+
 - Consumes: `axios` (mocked in the test via `vi.mock('axios')`).
 - Produces: `useFetch(url)` — a hook returning `{ data, loading, error }`. `data` starts `null`, `loading` starts `true`. Re-fetches whenever `url` changes (`url` itself is the effect dependency — callers build the full URL string, e.g. `CoinList(currency)`, before passing it in, so a currency change naturally changes the string and re-triggers the effect). On success: `{ data: <response.data>, loading: false, error: null }`. On failure: `{ data: null, loading: false, error: <caught error> }`. Passing `url` as `null`/`undefined` skips the fetch entirely and leaves `loading: false, data: null, error: null` (used by `CoinInfo`, which has no id until `coin` loads).
 
@@ -731,6 +735,7 @@ git commit -m "Add shared useFetch hook with loading/error state"
 ### Task 7: Consolidate theme into `src/theme.js`; wrap `App` once
 
 **Files:**
+
 - Create: `src/theme.js`
 - Modify: `src/App.jsx` (wrap in the single `ThemeProvider`)
 - Modify: `src/components/Header.jsx` (remove local theme + `ThemeProvider`, remove stray `console.log`)
@@ -738,6 +743,7 @@ git commit -m "Add shared useFetch hook with loading/error state"
 - Modify: `src/components/CoinInfo.jsx` (remove local theme + `ThemeProvider`)
 
 **Interfaces:**
+
 - Produces: `src/theme.js` exports `darkTheme` (default export) — the same `createTheme({ palette: { primary: { main: '#fff' }, mode: 'dark' } })` object all four components previously built separately.
 
 - [ ] **Step 1: Create `src/theme.js`**
@@ -877,9 +883,11 @@ git commit -m "Consolidate 4 duplicate MUI themes into one shared theme.js"
 ### Task 8: Refactor `Carousel.jsx` to use `useFetch`
 
 **Files:**
+
 - Modify: `src/components/Carousel.jsx`
 
 **Interfaces:**
+
 - Consumes: `useFetch(url)` from Task 6 (`{ data, loading, error }`); `formatNumber` from Task 5.
 
 - [ ] **Step 1: Replace the hand-rolled fetch with `useFetch`**
@@ -994,9 +1002,11 @@ git commit -m "Refactor Carousel to use useFetch, add missing key prop, add erro
 ### Task 9: Refactor `CoinsTable.jsx` — `useFetch`, bug fixes, cleanup
 
 **Files:**
+
 - Modify: `src/components/CoinsTable.jsx`
 
 **Interfaces:**
+
 - Consumes: `useFetch(url)` from Task 6; `formatNumber` from Task 5.
 
 - [ ] **Step 1: Rewrite `CoinsTable.jsx`**
@@ -1042,7 +1052,10 @@ const CoinsTable = () => {
 
   return (
     <Container sx={{ textAlign: 'center' }}>
-      <Typography variant="h4" sx={{ margin: '18px', fontFamily: 'Montserrat' }}>
+      <Typography
+        variant="h4"
+        sx={{ margin: '18px', fontFamily: 'Montserrat' }}
+      >
         Cryptocurrency prices by Market Cap
       </Typography>
       <TextField
@@ -1068,7 +1081,11 @@ const CoinsTable = () => {
                 <TableRow>
                   {['Coin', 'Price', '24h Change', 'Market Cap'].map((head) => (
                     <TableCell
-                      sx={{ color: 'black', fontWeight: '700', fontFamily: 'Montserrat' }}
+                      sx={{
+                        color: 'black',
+                        fontWeight: '700',
+                        fontFamily: 'Montserrat',
+                      }}
                       key={head}
                       align={head === 'Coin' ? '' : 'right'}
                     >
@@ -1078,65 +1095,77 @@ const CoinsTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filtered.slice((page - 1) * 10, (page - 1) * 10 + 10).map((row) => {
-                  const profit = row.price_change_percentage_24h > 0;
-                  return (
-                    <TableRow
-                      onClick={() => navigate(`/coins/${row.id}`)}
-                      sx={{
-                        backgroundColor: '#16171a',
-                        cursor: 'pointer',
-                        fontFamily: 'Montserrat',
-                        '&:hover': {
-                          backgroundColor: '#131111',
-                        },
-                      }}
-                      key={row.name}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
+                {filtered
+                  .slice((page - 1) * 10, (page - 1) * 10 + 10)
+                  .map((row) => {
+                    const profit = row.price_change_percentage_24h > 0;
+                    return (
+                      <TableRow
+                        onClick={() => navigate(`/coins/${row.id}`)}
                         sx={{
-                          display: 'flex',
-                          gap: '15px',
+                          backgroundColor: '#16171a',
+                          cursor: 'pointer',
+                          fontFamily: 'Montserrat',
+                          '&:hover': {
+                            backgroundColor: '#131111',
+                          },
                         }}
+                        key={row.name}
                       >
-                        <img
-                          src={row?.image}
-                          alt={row.name}
-                          height="50px"
-                          sx={{ marginBottom: '10px' }}
-                        />
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ textTransform: 'uppercase', fontSize: '22px' }}>
-                            {row.symbol}
-                          </span>
-                          <span style={{ color: 'darkgrey' }}>{row.name}</span>
-                        </div>
-                      </TableCell>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          sx={{
+                            display: 'flex',
+                            gap: '15px',
+                          }}
+                        >
+                          <img
+                            src={row?.image}
+                            alt={row.name}
+                            height="50px"
+                            sx={{ marginBottom: '10px' }}
+                          />
+                          <div
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                          >
+                            <span
+                              style={{
+                                textTransform: 'uppercase',
+                                fontSize: '22px',
+                              }}
+                            >
+                              {row.symbol}
+                            </span>
+                            <span style={{ color: 'darkgrey' }}>
+                              {row.name}
+                            </span>
+                          </div>
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {symbol} {formatNumber(row.current_price.toFixed(2))}
-                      </TableCell>
+                        <TableCell align="right">
+                          {symbol} {formatNumber(row.current_price.toFixed(2))}
+                        </TableCell>
 
-                      <TableCell
-                        align="right"
-                        sx={{
-                          color: profit ? 'rgb(14, 203, 129)' : 'red',
-                          fontWeight: '500',
-                        }}
-                      >
-                        {profit && '+'}
-                        {row.price_change_percentage_24h.toFixed(2)}%
-                      </TableCell>
+                        <TableCell
+                          align="right"
+                          sx={{
+                            color: profit ? 'rgb(14, 203, 129)' : 'red',
+                            fontWeight: '500',
+                          }}
+                        >
+                          {profit && '+'}
+                          {row.price_change_percentage_24h.toFixed(2)}%
+                        </TableCell>
 
-                      <TableCell align="right">
-                        {symbol} {formatNumber(row.market_cap.toString().slice(0, -6))}
-                        M
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                        <TableCell align="right">
+                          {symbol}{' '}
+                          {formatNumber(row.market_cap.toString().slice(0, -6))}
+                          M
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           )}
@@ -1171,6 +1200,7 @@ This fixes, in order: the `console.log(coins)` debug line (removed), the paginat
 - [ ] **Step 2: Verify the two bug fixes manually**
 
 Run: `npm run dev`, open the homepage.
+
 - Type a search query that filters down to a number of results not a clean multiple of 10 (e.g. search "a" — should match many coins with a non-multiple-of-10 count). Confirm the pagination control shows the correct number of pages (`Math.ceil(n/10)`) and the last page shows the remainder rows, not a blank page.
 - While on page 2 of the unfiltered list, type a search query. Confirm the view jumps back to page 1's results instead of showing an empty table.
 
@@ -1191,9 +1221,11 @@ git commit -m "Refactor CoinsTable to useFetch; fix pagination rounding and sear
 ### Task 10: Refactor `CP.jsx` — `useFetch`, hoist `styled()` definitions
 
 **Files:**
+
 - Modify: `src/Pages/CP.jsx`
 
 **Interfaces:**
+
 - Consumes: `useFetch(url)` from Task 6; `formatNumber` from Task 5.
 
 - [ ] **Step 1: Rewrite `CP.jsx`**
@@ -1341,8 +1373,11 @@ const CP = () => {
             &nbsp; &nbsp;
             <Typography variant="h5" style={{ fontFamily: 'Montserrat' }}>
               {symbol}{' '}
-              {coin?.market_data.current_price[currency.toLowerCase()] !== undefined
-                ? formatNumber(coin?.market_data.current_price[currency.toLowerCase()])
+              {coin?.market_data.current_price[currency.toLowerCase()] !==
+              undefined
+                ? formatNumber(
+                    coin?.market_data.current_price[currency.toLowerCase()]
+                  )
                 : 'N/A'}
             </Typography>
           </span>
@@ -1360,7 +1395,8 @@ const CP = () => {
             &nbsp; &nbsp;
             <Typography variant="h5" style={{ fontFamily: 'Montserrat' }}>
               {symbol}{' '}
-              {coin?.market_data.market_cap[currency.toLowerCase()] !== undefined
+              {coin?.market_data.market_cap[currency.toLowerCase()] !==
+              undefined
                 ? formatNumber(
                     coin?.market_data.market_cap[currency.toLowerCase()]
                       .toString()
@@ -1404,9 +1440,11 @@ git commit -m "Refactor CP to useFetch, hoist styled() definitions, add loading/
 ### Task 11: Refactor `CoinInfo.jsx` — `useFetch` for historic data, hoist `styled()`
 
 **Files:**
+
 - Modify: `src/components/CoinInfo.jsx`
 
 **Interfaces:**
+
 - Consumes: `useFetch(url)` from Task 6. `useFetch` is only called when `coin` exists — pass `coin ? HistoricalChart(coin.id, days, currency) : null` so it respects the "skip when url is falsy" behavior from Task 6.
 
 - [ ] **Step 1: Rewrite `CoinInfo.jsx`**
@@ -1554,6 +1592,7 @@ git commit -m "Refactor CoinInfo to useFetch, hoist styled Container, fix chart-
 ### Task 12: Hoist `SelectButton`'s `styled()` to module scope
 
 **Files:**
+
 - Modify: `src/components/SelectButton.jsx`
 
 - [ ] **Step 1: Rewrite `SelectButton.jsx`**
@@ -1616,10 +1655,12 @@ git commit -m "Hoist SelectButton's styled() definition to module scope"
 ### Task 13: Component tests for `Header` and `CoinsTable`
 
 **Files:**
+
 - Create: `src/components/Header.test.jsx`
 - Create: `src/components/CoinsTable.test.jsx`
 
 **Interfaces:**
+
 - Consumes: `CryptoContext`/`useCryptoState` (unchanged since Task 1's rename), `useFetch` (mocked via `vi.mock('../hooks/useFetch')` in the `CoinsTable` test — this isolates the component test from real network calls without needing to mock `axios` directly).
 
 - [ ] **Step 1: Write `src/components/Header.test.jsx`**
@@ -1789,6 +1830,7 @@ Run: `npm run preview`, open the printed URL.
 - [ ] **Step 4: Manual smoke test against the preview build**
 
 Walk through, in the browser:
+
 1. Homepage loads: banner, trending carousel (auto-scrolling), coin table.
 2. Switch currency USD ↔ INR in the header — carousel and table prices update.
 3. Search for a coin whose filtered result count isn't a multiple of 10 — pagination page count and last page are correct (Task 9 fix).

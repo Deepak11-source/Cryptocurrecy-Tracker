@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useCryptoState } from "../CryptoContext";
-import { useParams } from "react-router-dom";
-import { SingleCoin } from "../config/api";
-import axios from "axios";
-import CoinInfo from "../components/CoinInfo";
-import DOMPurify from "dompurify";
-import { styled } from "@mui/system";
-import { Typography } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { useCryptoState } from '../CryptoContext';
+import { useParams } from 'react-router-dom';
+import { SingleCoin } from '../config/api';
+import axios from 'axios';
+import CoinInfo from '../components/CoinInfo';
+import DOMPurify from 'dompurify';
+import { styled } from '@mui/system';
+import { Typography } from '@mui/material';
 
 export function numberWithCommas(x) {
   const parsedNumber = parseFloat(x);
   if (isNaN(parsedNumber)) {
-    return "Invalid Number";
+    return 'Invalid Number';
   }
-  return parsedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parsedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 const CP = () => {
@@ -32,41 +32,41 @@ const CP = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency]);
 
-  const StyledDiv = styled("div")({
-    display: "flex",
-    "@media (max-width: 960px)": {
-      flexDirection: "column",
-      alignItems: "center",
+  const StyledDiv = styled('div')({
+    display: 'flex',
+    '@media (max-width: 960px)': {
+      flexDirection: 'column',
+      alignItems: 'center',
     },
   });
 
-  const SidebarDiv = styled("div")({
-    width: "30%",
-    "@media (max-width: 960px)": {
-      width: "100%",
+  const SidebarDiv = styled('div')({
+    width: '30%',
+    '@media (max-width: 960px)': {
+      width: '100%',
     },
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     marginTop: 25,
-    borderRight: "2px solid grey",
+    borderRight: '2px solid grey',
   });
 
-  const MarketDataDiv = styled("div")({
-    alignSelf: "start",
+  const MarketDataDiv = styled('div')({
+    alignSelf: 'start',
     padding: 25,
     paddingTop: 10,
-    width: "100%",
-    "@media (max-width: 960px)": {
-      display: "flex",
-      justifyContent: "space-around",
+    width: '100%',
+    '@media (max-width: 960px)': {
+      display: 'flex',
+      justifyContent: 'space-around',
     },
-    "@media (max-width: 600px)": {
-      flexDirection: "column",
-      alignItems: "center",
+    '@media (max-width: 600px)': {
+      flexDirection: 'column',
+      alignItems: 'center',
     },
-    "@media (max-width: 400px)": {
-      alignItems: "start",
+    '@media (max-width: 400px)': {
+      alignItems: 'start',
     },
   });
 
@@ -77,14 +77,14 @@ const CP = () => {
           src={coin?.image.large}
           alt={coin?.name}
           height="200px"
-          style={{ marginBottom: "20px" }}
+          style={{ marginBottom: '20px' }}
         />
         <Typography
           variant="h3"
           sx={{
-            fontWeight: "bold",
-            marginBottom: "20px",
-            fontFamily: "Montserrat",
+            fontWeight: 'bold',
+            marginBottom: '20px',
+            fontFamily: 'Montserrat',
           }}
         >
           {coin?.name}
@@ -93,31 +93,31 @@ const CP = () => {
         <Typography
           variant="subtitle1"
           sx={{
-            width: "100%",
-            fontFamily: "Montserrat",
-            padding: "25px",
-            paddingBottom: "15px",
-            paddingTop: "0",
-            textAlign: "justify",
+            width: '100%',
+            fontFamily: 'Montserrat',
+            padding: '25px',
+            paddingBottom: '15px',
+            paddingTop: '0',
+            textAlign: 'justify',
           }}
         >
-          {coin?.description.en.split(". ")[0] && (
+          {coin?.description.en.split('. ')[0] && (
             <div
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(coin.description.en.split(". ")[0]),
+                __html: DOMPurify.sanitize(coin.description.en.split('. ')[0]),
               }}
             />
           )}
         </Typography>
 
         <MarketDataDiv>
-          <span style={{ display: "flex" }}>
+          <span style={{ display: 'flex' }}>
             <Typography
               variant="h5"
               sx={{
-                fontWeight: "bold",
-                marginBottom: "20px",
-                fontFamily: "Montserrat",
+                fontWeight: 'bold',
+                marginBottom: '20px',
+                fontFamily: 'Montserrat',
               }}
             >
               Rank:
@@ -126,20 +126,20 @@ const CP = () => {
             <Typography
               variant="h5"
               style={{
-                fontFamily: "Montserrat",
+                fontFamily: 'Montserrat',
               }}
             >
               {numberWithCommas(coin?.market_cap_rank)}
             </Typography>
           </span>
 
-          <span style={{ display: "flex" }}>
+          <span style={{ display: 'flex' }}>
             <Typography
               variant="h5"
               sx={{
-                fontWeight: "bold",
-                marginBottom: "20px",
-                fontFamily: "Montserrat",
+                fontWeight: 'bold',
+                marginBottom: '20px',
+                fontFamily: 'Montserrat',
               }}
             >
               Current Price:
@@ -148,25 +148,25 @@ const CP = () => {
             <Typography
               variant="h5"
               style={{
-                fontFamily: "Montserrat",
+                fontFamily: 'Montserrat',
               }}
             >
-              {symbol}{" "}
+              {symbol}{' '}
               {coin?.market_data.current_price[currency.toLowerCase()] !==
               undefined
                 ? numberWithCommas(
                     coin?.market_data.current_price[currency.toLowerCase()]
                   )
-                : "N/A"}
+                : 'N/A'}
             </Typography>
           </span>
-          <span style={{ display: "flex" }}>
+          <span style={{ display: 'flex' }}>
             <Typography
               variant="h5"
               sx={{
-                fontWeight: "bold",
-                marginBottom: "20px",
-                fontFamily: "Montserrat",
+                fontWeight: 'bold',
+                marginBottom: '20px',
+                fontFamily: 'Montserrat',
               }}
             >
               Market Cap:
@@ -175,10 +175,10 @@ const CP = () => {
             <Typography
               variant="h5"
               style={{
-                fontFamily: "Montserrat",
+                fontFamily: 'Montserrat',
               }}
             >
-              {symbol}{" "}
+              {symbol}{' '}
               {coin?.market_data.market_cap[currency.toLowerCase()] !==
               undefined
                 ? numberWithCommas(
@@ -186,7 +186,7 @@ const CP = () => {
                       .toString()
                       .slice(0, -6)
                   )
-                : "N/A"}{" "}
+                : 'N/A'}{' '}
               M
             </Typography>
           </span>

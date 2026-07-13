@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   AppBar,
   Container,
@@ -6,10 +6,10 @@ import {
   Select,
   Toolbar,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
-import { useCryptoState } from "../CryptoContext";
+import { useNavigate } from 'react-router-dom';
+import { useCryptoState } from '../CryptoContext';
 
 const Header = () => {
   const { currency, setCurrency } = useCryptoState();
@@ -33,12 +33,12 @@ const Header = () => {
             <Typography
               sx={{
                 flex: 1,
-                color: "gold",
-                fontFamily: "Montserrat, sans-serif",
-                fontWeight: "bold",
-                cursor: "pointer",
+                color: 'gold',
+                fontFamily: 'Montserrat, sans-serif',
+                fontWeight: 'bold',
+                cursor: 'pointer',
               }}
-              onClick={() => navigate("/")}
+              onClick={() => navigate('/')}
               variant="h6"
             >
               CryptoTracker
@@ -51,8 +51,8 @@ const Header = () => {
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
             >
-              <MenuItem value={"USD"}>USD</MenuItem>
-              <MenuItem value={"INR"}>INR</MenuItem>
+              <MenuItem value={'USD'}>USD</MenuItem>
+              <MenuItem value={'INR'}>INR</MenuItem>
             </Select>
           </Toolbar>
         </Container>

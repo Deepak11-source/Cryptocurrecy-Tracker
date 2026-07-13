@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { useCryptoState } from '../CryptoContext';
 import axios from 'axios';
 import { HistoricalChart } from '../config/api';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
-import Chart from 'chart.js/auto';  // Updated import
+import Chart from 'chart.js/auto'; // Updated import
 import { chartDays } from '../config/Chartdata';
 import SelectButton from './SelectButton';
 import { styled } from '@mui/system';
@@ -20,7 +19,9 @@ const CoinInfo = ({ coin }) => {
 
   const fetchHistoricData = async () => {
     if (coin) {
-      const { data } = await axios.get(HistoricalChart(coin.id, days, currency));
+      const { data } = await axios.get(
+        HistoricalChart(coin.id, days, currency)
+      );
       setHistoricData(data.prices);
     }
   };
@@ -54,7 +55,6 @@ const CoinInfo = ({ coin }) => {
               radius: 1,
             },
           },
-          
         },
       });
     }
@@ -100,7 +100,11 @@ const CoinInfo = ({ coin }) => {
     <ThemeProvider theme={darkTheme}>
       <Container>
         {!historicData || flag === false ? (
-          <CircularProgress style={{ color: 'gold' }} size={250} thickness={1} />
+          <CircularProgress
+            style={{ color: 'gold' }}
+            size={250}
+            thickness={1}
+          />
         ) : (
           <>
             <canvas ref={chartRef} width="400" height="180"></canvas>

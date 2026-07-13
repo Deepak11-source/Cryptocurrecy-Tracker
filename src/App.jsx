@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Header from './components/Header';
 import Homepage from './Pages/Homepage';
-import CP from './Pages/CP'
+import CP from './Pages/CP';
 
 const StyledAppContainer = styled('div')({
   backgroundColor: '#14161a',
