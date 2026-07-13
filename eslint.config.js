@@ -29,6 +29,11 @@ export default [
     rules: {
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
+      // Deliberately NOT spreading eslint-plugin-react-hooks's `recommended`
+      // config here - as of v7 that's the React Compiler rule set (adds
+      // ~14 error-level rules like set-state-in-effect/static-components),
+      // which flags this project's own useFetch-hook pattern. Only the two
+      // classic hooks rules are enabled on purpose.
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react/prop-types': 'off',

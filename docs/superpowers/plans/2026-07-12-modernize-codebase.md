@@ -6,7 +6,7 @@
 
 **Architecture:** Same component tree and routing as today (`App` → `Header` + `Routes` → `Homepage`/`CP`). The only structural additions are `src/theme.js` (one shared MUI theme), `src/hooks/useFetch.js` (one shared data-fetching hook consumed by `Carousel`, `CoinsTable`, `CP`, `CoinInfo`), and `src/utils/formatNumber.js` (one shared number formatter). Build/test tooling moves from `react-scripts` to Vite + Vitest.
 
-**Tech Stack:** React 18.3, MUI 9, react-router-dom 7, Vite 8, Vitest 4 + @testing-library/react 16, ESLint 10 (flat config) + Prettier 3.
+**Tech Stack:** React 18.3, MUI 9, react-router-dom 7, Vite 8, Vitest 4 + @testing-library/react 16, ESLint 9 (flat config, `@eslint/js` matched to the same major - `eslint-plugin-react`'s peerDependencies cap at `^9.7`, so ESLint 10 wasn't installable at the time this plan was executed) + Prettier 3.
 
 ## Global Constraints
 
