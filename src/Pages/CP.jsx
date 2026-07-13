@@ -7,14 +7,7 @@ import CoinInfo from '../components/CoinInfo';
 import DOMPurify from 'dompurify';
 import { styled } from '@mui/system';
 import { Typography } from '@mui/material';
-
-export function numberWithCommas(x) {
-  const parsedNumber = parseFloat(x);
-  if (isNaN(parsedNumber)) {
-    return 'Invalid Number';
-  }
-  return parsedNumber.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
+import formatNumber from '../utils/formatNumber';
 
 const CP = () => {
   const { id } = useParams();
@@ -129,7 +122,7 @@ const CP = () => {
                 fontFamily: 'Montserrat',
               }}
             >
-              {numberWithCommas(coin?.market_cap_rank)}
+              {formatNumber(coin?.market_cap_rank)}
             </Typography>
           </span>
 
@@ -154,7 +147,7 @@ const CP = () => {
               {symbol}{' '}
               {coin?.market_data.current_price[currency.toLowerCase()] !==
               undefined
-                ? numberWithCommas(
+                ? formatNumber(
                     coin?.market_data.current_price[currency.toLowerCase()]
                   )
                 : 'N/A'}
@@ -181,7 +174,7 @@ const CP = () => {
               {symbol}{' '}
               {coin?.market_data.market_cap[currency.toLowerCase()] !==
               undefined
-                ? numberWithCommas(
+                ? formatNumber(
                     coin?.market_data.market_cap[currency.toLowerCase()]
                       .toString()
                       .slice(0, -6)

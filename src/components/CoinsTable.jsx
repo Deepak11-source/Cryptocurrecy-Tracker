@@ -17,10 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-export function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
+import formatNumber from '../utils/formatNumber';
 
 const CoinsTable = () => {
   const [coins, setCoins] = useState([]);
@@ -152,7 +149,7 @@ const CoinsTable = () => {
 
                         <TableCell align="right">
                           {symbol}{' '}
-                          {numberWithCommas(row.current_price.toFixed(2))}
+                          {formatNumber(row.current_price.toFixed(2))}
                         </TableCell>
 
                         <TableCell
@@ -168,7 +165,7 @@ const CoinsTable = () => {
 
                         <TableCell align="right">
                           {symbol}{' '}
-                          {numberWithCommas(
+                          {formatNumber(
                             row.market_cap.toString().slice(0, -6)
                           )}
                           M
